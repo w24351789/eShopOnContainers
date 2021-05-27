@@ -35,7 +35,7 @@ function Install-Chart  {
     if ($chart -ne "eshop-common" -or $customRegistry)  {       # eshop-common is ignored when no secret must be deployed        
         $command = "install $appName-$chart $options $chart"
         Write-Host "Helm Command: helm $command" -ForegroundColor Gray
-        Invoke-Expression 'cmd /c "helm $command"'
+        Invoke-Expression "helm $command"
     }
 }
 
@@ -136,14 +136,14 @@ if ($deployCharts) {
     foreach ($chart in $charts) {
         if ($chartsToDeploy -eq "*" -or $chartsToDeploy.Contains($chart)) {
             Write-Host "Installing: $chart" -ForegroundColor Green
-            Install-Chart $chart "-f app.yaml --values inf.yaml -f $ingressValuesFile -f $ingressMeshAnnotationsFile --set app.name=$appName --set inf.k8s.dns=$dns --set ingress.hosts={$dns} --set image.tag=$imageTag --set image.pullPolicy=$imagePullPolicy --set inf.tls.enabled=$sslEnabled --set inf.mesh.enabled=$useMesh --set inf.k8s.local=$useLocalk8s" $useCustomRegistry
+            Install-Chart $chart "-f app.yaml --values inf.yaml -f $ingressValuesFile -f $ingressMeshAnnotationsFile --set app.name=$appName --set inf.k8s.dns=$dns --set ""ingress.hosts={$dns}"" --set image.tag=$imageTag --set image.pullPolicy=$imagePullPolicy --set inf.tls.enabled=$sslEnabled --set inf.mesh.enabled=$useMesh --set inf.k8s.local=$useLocalk8s" $useCustomRegistry
         }
     }
 
     foreach ($chart in $gateways) {
         if ($chartsToDeploy -eq "*" -or $chartsToDeploy.Contains($chart)) {
             Write-Host "Installing Api Gateway Chart: $chart" -ForegroundColor Green
-            Install-Chart $chart "-f app.yaml -f inf.yaml -f $ingressValuesFile  --set app.name=$appName --set inf.k8s.dns=$dns  --set image.pullPolicy=$imagePullPolicy --set inf.mesh.enabled=$useMesh --set ingress.hosts={$dns} --set inf.tls.enabled=$sslEnabled" $false
+            Install-Chart $chart "-f app.yaml -f inf.yaml -f $ingressValuesFile  --set app.name=$appName --set inf.k8s.dns=$dns  --set image.pullPolicy=$imagePullPolicy --set inf.mesh.enabled=$useMesh --set ""ingress.hosts={$dns}"" --set inf.tls.enabled=$sslEnabled" $false
             
         }
     }
